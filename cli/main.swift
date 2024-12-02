@@ -20,7 +20,7 @@ struct cli: ParsableCommand {
             }
 
             let distance = try! part1Result.get()
-            print("Day one, part 1, answer. Distance: \(distance)")
+            print("Day 1, part 1, answer. Distance: \(distance)")
 
             let part2Result = day01.runPart2(fileContent)
             if case let .failure(error) = part2Result {
@@ -29,7 +29,17 @@ struct cli: ParsableCommand {
             }
 
             let similarityScore = try! part2Result.get()
-            print("Day one, part 2, answer. Similarity score: \(similarityScore)")
+            print("Day 1, part 2, answer. Similarity score: \(similarityScore)")
+        case 2:
+            let fileContent = try String(contentsOfFile: "inputs/day02.txt", encoding: .utf8)
+            let part1Result = day02.runPart1(fileContent)
+            if case let .failure(error) = part1Result {
+                print("Day 2, part 1, error: \(error)")
+                throw error
+            }
+
+            let safeReportCount = try! part1Result.get()
+            print("Day 2, part 1, answer. Safe reports: \(safeReportCount)")
         default:
             print("Day \(day) not implemented")
         }

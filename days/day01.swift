@@ -1,37 +1,30 @@
 import Foundation
 
 public class day01 {
-    enum parseError: Error {
-        case emptyInput
-        case noInputLines
-        case stringSplitNotTwoParts
-        case notAnUnsignedInteger
-    }
-
-    static func parseLine(_ line: String.SubSequence) -> (Result<(UInt, UInt), parseError>) {
+    static func parseLine(_ line: String.SubSequence) -> (Result<(UInt, UInt), dayError>) {
         if line.isEmpty {
-            return .failure(parseError.emptyInput)
+            return .failure(dayError.emptyInput)
         }
 
         let parts = line.split(whereSeparator: \.isWhitespace)
         if parts.count != 2 {
-            return .failure(parseError.stringSplitNotTwoParts)
+            return .failure(dayError.stringSplitNotTwoParts)
         }
 
         guard let a = UInt(parts[0]) else {
-            return .failure(parseError.notAnUnsignedInteger)
+            return .failure(dayError.notAnUnsignedInteger)
         }
 
         guard let b = UInt(parts[1]) else {
-            return .failure(parseError.notAnUnsignedInteger)
+            return .failure(dayError.notAnUnsignedInteger)
         }
 
         return .success((a, b))
     }
 
-    static func parseInput(_ input: String) -> Result<([UInt], [UInt]), parseError> {
+    static func parseInput(_ input: String) -> Result<([UInt], [UInt]), dayError> {
         if input.lines.count == 0 {
-            return .failure(parseError.noInputLines)
+            return .failure(dayError.noInputLines)
         }
 
         var x: [UInt] = []
@@ -53,11 +46,6 @@ public class day01 {
         return .success((x, y))
     }
 
-    enum calcError: Error {
-        case listCountNotEqual
-        case arrayOutOfBounds
-    }
-
     static func calculateDistance(_ a: UInt, _ b: UInt) -> UInt {
         if a > b {
             return a - b
@@ -67,7 +55,7 @@ public class day01 {
 
     static func calculateDistances(_ x: [UInt], _ y: [UInt]) -> Result<UInt, Error> {
         if x.count != y.count {
-            return .failure(calcError.listCountNotEqual)
+            return .failure(dayError.listCountNotEqual)
         }
 
         var sortedX = x
@@ -78,10 +66,10 @@ public class day01 {
         var sum: UInt = 0
         for i in x.indices {
             guard let a = sortedX[safe: i] else {
-                return .failure(calcError.arrayOutOfBounds)
+                return .failure(dayError.arrayOutOfBounds)
             }
             guard let b = sortedY[safe: i] else {
-                return .failure(calcError.arrayOutOfBounds)
+                return .failure(dayError.arrayOutOfBounds)
             }
 
             let distance = calculateDistance(a, b)
@@ -93,7 +81,7 @@ public class day01 {
 
     static func calculateSimilarity(_ x: [UInt], _ y: [UInt]) -> Result<UInt, Error> {
         if x.count != y.count {
-            return .failure(calcError.listCountNotEqual)
+            return .failure(dayError.listCountNotEqual)
         }
 
         var sum: UInt = 0
@@ -108,10 +96,6 @@ public class day01 {
         }
 
         return .success(sum)
-    }
-
-    enum dayError: Error {
-        case unknown
     }
 
     static public func runPart1(_ input: String) -> Result<UInt, Error> {

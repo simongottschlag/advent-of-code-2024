@@ -7,3 +7,12 @@ extension Collection {
         indices.contains(index) ? self[index] : nil
     }
 }
+
+enum dayError: Error {
+    case emptyInput
+    case noInputLines
+    case stringSplitNotTwoParts
+    case notAnUnsignedInteger
+    case listCountNotEqual
+    case arrayOutOfBounds
+}

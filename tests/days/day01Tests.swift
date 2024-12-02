@@ -4,7 +4,7 @@ import Testing
 @testable import days
 
 @Suite("day01ParseLine")
-struct parseLineTests {
+struct day01ParseLineTests {
     @Test func parseLineSucceeds() {
         let line: String.SubSequence = "3   4"
         let result = day01.parseLine(line)
@@ -21,7 +21,7 @@ struct parseLineTests {
         let line: String.SubSequence = ""
         let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.emptyInput)
+            return #expect(error == dayError.emptyInput)
         }
 
         Issue.record("should not be reached")
@@ -31,7 +31,7 @@ struct parseLineTests {
         let line: String.SubSequence = "1"
         let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.stringSplitNotTwoParts)
+            return #expect(error == dayError.stringSplitNotTwoParts)
         }
 
         Issue.record("should not be reached")
@@ -41,7 +41,7 @@ struct parseLineTests {
         let line: String.SubSequence = "1 2 3"
         let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.stringSplitNotTwoParts)
+            return #expect(error == dayError.stringSplitNotTwoParts)
         }
 
         Issue.record("should not be reached")
@@ -51,7 +51,7 @@ struct parseLineTests {
         let line: String.SubSequence = "1 a"
         let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.notAnUnsignedInteger)
+            return #expect(error == dayError.notAnUnsignedInteger)
         }
 
         Issue.record("should not be reached")
@@ -61,7 +61,7 @@ struct parseLineTests {
         let line: String.SubSequence = "a 1"
         let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.notAnUnsignedInteger)
+            return #expect(error == dayError.notAnUnsignedInteger)
         }
 
         Issue.record("should not be reached")
@@ -69,7 +69,7 @@ struct parseLineTests {
 }
 
 @Suite("day01ParseInput")
-struct parseInputTests {
+struct day01ParseInputTests {
     @Test func parseInputSucceeds() {
         let input = """
             3   4
@@ -105,7 +105,7 @@ struct parseInputTests {
         let input = ""
         let result = day01.parseInput(input)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.noInputLines)
+            return #expect(error == dayError.noInputLines)
         }
 
         Issue.record("should not be reached")
@@ -123,7 +123,7 @@ struct parseInputTests {
             """
         let result = day01.parseInput(input)
         if case let .failure(error) = result {
-            return #expect(error == day01.parseError.stringSplitNotTwoParts)
+            return #expect(error == dayError.stringSplitNotTwoParts)
         }
 
         Issue.record("should not be reached")
@@ -131,7 +131,7 @@ struct parseInputTests {
 }
 
 @Suite("day01CalculateDistance")
-struct calculateDistanceTests {
+struct day01CalculateDistanceTests {
     @Test func calculateDistancesSucceeds() async throws {
         let a = day01.calculateDistance(1, 2)
         #expect(a == 1)
@@ -148,7 +148,7 @@ struct calculateDistanceTests {
 }
 
 @Suite("day01CalculateDistances")
-struct calculateDistancesTests {
+struct day01CalculateDistancesTests {
     @Test func calculateDistancesSucceeds() {
         let aResult = day01.calculateDistances([1], [2])
         guard case .success(let a) = aResult else {
@@ -174,7 +174,7 @@ struct calculateDistancesTests {
 }
 
 @Suite("day01RunPart1")
-struct runDay01Part1Tests {
+struct day01RunPart1Tests {
     @Test(
         .enabled(if: FileManager.default.fileExists(atPath: "inputs/day01.txt"))
     )
@@ -191,7 +191,7 @@ struct runDay01Part1Tests {
 }
 
 @Suite("day01CalculateSimilarity")
-struct calculateSimilarityTests {
+struct day01CalculateSimilarityTests {
     @Test func calculateSimilaritySucceeds() {
         let aResult = day01.calculateSimilarity([1], [2])
         guard case .success(let a) = aResult else {
@@ -217,7 +217,7 @@ struct calculateSimilarityTests {
 }
 
 @Suite("day01RunPart2")
-struct runDay01Part2Tests {
+struct day01RunPart2Tests {
     @Test(
         .enabled(if: FileManager.default.fileExists(atPath: "inputs/day01.txt"))
     )

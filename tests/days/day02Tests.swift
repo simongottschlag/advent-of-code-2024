@@ -82,6 +82,19 @@ struct day02CountSafeReportsTests {
     }
 }
 
+@Suite("day02CountSafeReportsWithProblemDampening")
+struct day02CountSafeReportsWithProblemDampeningTests {
+    @Test func countSafeReportsWithProblemDampening() {
+        let reports = day02TestCases.map { $0.output }
+        let result = day02.countSafeReportsWithProblemDampening(reports)
+        guard case .success(let count) = result else {
+            Issue.record("Should never be reached")
+            return
+        }
+        #expect(count == 4)
+    }
+}
+
 @Suite("day02RunPart1")
 struct day02RunPart1Tests {
     @Test(
@@ -95,5 +108,21 @@ struct day02RunPart1Tests {
             return
         }
         #expect(count == 472)
+    }
+}
+
+@Suite("day02RunPart2")
+struct day02RunPart2Tests {
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day02.txt"))
+    )
+    func runPart2() {
+        let fileContent = try! String(contentsOfFile: "inputs/day02.txt", encoding: .utf8)
+        let result = day02.runPart2(fileContent)
+        guard case .success(let count) = result else {
+            Issue.record("Should never be reached")
+            return
+        }
+        #expect(count == 520)
     }
 }

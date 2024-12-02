@@ -40,6 +40,17 @@ struct cli: ParsableCommand {
 
             let safeReportCount = try! part1Result.get()
             print("Day 2, part 1, answer. Safe reports: \(safeReportCount)")
+
+            let part2Result = day02.runPart2(fileContent)
+            if case let .failure(error) = part2Result {
+                print("Day 2, part 2, error: \(error)")
+                throw error
+            }
+
+            let safeReportCountWithProblemDampening = try! part2Result.get()
+            print(
+                "Day 2, part 2, answer. Safe reports with problem dampening: \(safeReportCountWithProblemDampening)"
+            )
         default:
             print("Day \(day) not implemented")
         }

@@ -1,12 +1,13 @@
+import Foundation
 import Testing
 
 @testable import days
 
-@Suite("parseLine")
+@Suite("day01ParseLine")
 struct parseLineTests {
     @Test func parseLineSucceeds() {
         let line: String.SubSequence = "3   4"
-        let result = parseLine(line)
+        let result = day01.parseLine(line)
         guard case .success(let (a, b)) = result else {
             Issue.record("Should never be reached")
             return
@@ -18,9 +19,9 @@ struct parseLineTests {
 
     @Test func parseLineFailsEmptyString() {
         let line: String.SubSequence = ""
-        let result = parseLine(line)
+        let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == parseError.emptyInput)
+            return #expect(error == day01.parseError.emptyInput)
         }
 
         Issue.record("should not be reached")
@@ -28,9 +29,9 @@ struct parseLineTests {
 
     @Test func parseLineFailsOneInt() {
         let line: String.SubSequence = "1"
-        let result = parseLine(line)
+        let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == parseError.stringSplitNotTwoParts)
+            return #expect(error == day01.parseError.stringSplitNotTwoParts)
         }
 
         Issue.record("should not be reached")
@@ -38,9 +39,9 @@ struct parseLineTests {
 
     @Test func parseLineFailsThreeInts() {
         let line: String.SubSequence = "1 2 3"
-        let result = parseLine(line)
+        let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == parseError.stringSplitNotTwoParts)
+            return #expect(error == day01.parseError.stringSplitNotTwoParts)
         }
 
         Issue.record("should not be reached")
@@ -48,9 +49,9 @@ struct parseLineTests {
 
     @Test func parseLineFailsOneIntOneString() {
         let line: String.SubSequence = "1 a"
-        let result = parseLine(line)
+        let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == parseError.notAnUnsignedInteger)
+            return #expect(error == day01.parseError.notAnUnsignedInteger)
         }
 
         Issue.record("should not be reached")
@@ -58,16 +59,16 @@ struct parseLineTests {
 
     @Test func parseLineFailsOneStringOneInt() {
         let line: String.SubSequence = "a 1"
-        let result = parseLine(line)
+        let result = day01.parseLine(line)
         if case let .failure(error) = result {
-            return #expect(error == parseError.notAnUnsignedInteger)
+            return #expect(error == day01.parseError.notAnUnsignedInteger)
         }
 
         Issue.record("should not be reached")
     }
 }
 
-@Suite("parseInput")
+@Suite("day01ParseInput")
 struct parseInputTests {
     @Test func parseInputSucceeds() {
         let input = """
@@ -78,7 +79,7 @@ struct parseInputTests {
             3   9
             3   3
             """
-        let result = parseInput(input)
+        let result = day01.parseInput(input)
         guard case .success(let (x, y)) = result else {
             Issue.record("Should never be reached")
             return
@@ -102,9 +103,9 @@ struct parseInputTests {
 
     @Test func parseInputFailsNoInput() {
         let input = ""
-        let result = parseInput(input)
+        let result = day01.parseInput(input)
         if case let .failure(error) = result {
-            return #expect(error == parseError.noInputLines)
+            return #expect(error == day01.parseError.noInputLines)
         }
 
         Issue.record("should not be reached")
@@ -120,50 +121,50 @@ struct parseInputTests {
             3   3
             5
             """
-        let result = parseInput(input)
+        let result = day01.parseInput(input)
         if case let .failure(error) = result {
-            return #expect(error == parseError.stringSplitNotTwoParts)
+            return #expect(error == day01.parseError.stringSplitNotTwoParts)
         }
 
         Issue.record("should not be reached")
     }
 }
 
-@Suite("calculateDistance")
+@Suite("day01CalculateDistance")
 struct calculateDistanceTests {
     @Test func calculateDistancesSucceeds() async throws {
-        let a = calculateDistance(1, 2)
+        let a = day01.calculateDistance(1, 2)
         #expect(a == 1)
 
-        let b = calculateDistance(2, 1)
+        let b = day01.calculateDistance(2, 1)
         #expect(b == 1)
 
-        let c = calculateDistance(0, 100)
+        let c = day01.calculateDistance(0, 100)
         #expect(c == 100)
 
-        let d = calculateDistance(100, 0)
+        let d = day01.calculateDistance(100, 0)
         #expect(d == 100)
     }
 }
 
-@Suite("calculateDistances")
+@Suite("day01CalculateDistances")
 struct calculateDistancesTests {
     @Test func calculateDistancesSucceeds() {
-        let aResult = calculateDistances([1], [2])
+        let aResult = day01.calculateDistances([1], [2])
         guard case .success(let a) = aResult else {
             Issue.record("Should never be reached")
             return
         }
         #expect(a == 1)
 
-        let bResult = calculateDistances([2], [1])
+        let bResult = day01.calculateDistances([2], [1])
         guard case .success(let b) = bResult else {
             Issue.record("Should never be reached")
             return
         }
         #expect(b == 1)
 
-        let cResult = calculateDistances([3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3])
+        let cResult = day01.calculateDistances([3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3])
         guard case .success(let c) = cResult else {
             Issue.record("Should never be reached")
             return
@@ -172,11 +173,14 @@ struct calculateDistancesTests {
     }
 }
 
-@Suite("runDay01Part1")
+@Suite("day01RunPart1")
 struct runDay01Part1Tests {
-    @Test func runDay01Part1Succeeds() async throws {
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day01.txt"))
+    )
+    func runDay01Part1Succeeds() async throws {
         let input = try String(contentsOfFile: "inputs/day01.txt", encoding: .utf8)
-        let result = runDay01Part1(input)
+        let result = day01.runPart1(input)
         guard case .success(let distance) = result else {
             Issue.record("Should never be reached")
             return
@@ -186,24 +190,24 @@ struct runDay01Part1Tests {
     }
 }
 
-@Suite("calculateSimilarity")
+@Suite("day01CalculateSimilarity")
 struct calculateSimilarityTests {
     @Test func calculateSimilaritySucceeds() {
-        let aResult = calculateSimilarity([1], [2])
+        let aResult = day01.calculateSimilarity([1], [2])
         guard case .success(let a) = aResult else {
             Issue.record("Should never be reached")
             return
         }
         #expect(a == 0)
 
-        let bResult = calculateSimilarity([2], [1])
+        let bResult = day01.calculateSimilarity([2], [1])
         guard case .success(let b) = bResult else {
             Issue.record("Should never be reached")
             return
         }
         #expect(b == 0)
 
-        let cResult = calculateSimilarity([3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3])
+        let cResult = day01.calculateSimilarity([3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3])
         guard case .success(let c) = cResult else {
             Issue.record("Should never be reached")
             return
@@ -212,11 +216,14 @@ struct calculateSimilarityTests {
     }
 }
 
-@Suite("runDay01Part2")
+@Suite("day01RunPart2")
 struct runDay01Part2Tests {
-    @Test func runDay01Part2Succeeds() async throws {
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day01.txt"))
+    )
+    func runDay01Part2Succeeds() async throws {
         let input = try String(contentsOfFile: "inputs/day01.txt", encoding: .utf8)
-        let result = runDay01Part2(input)
+        let result = day01.runPart2(input)
         guard case .success(let similarityScore) = result else {
             Issue.record("Should never be reached")
             return

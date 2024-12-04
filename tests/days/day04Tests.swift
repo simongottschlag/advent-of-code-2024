@@ -193,3 +193,51 @@ struct day04RunPart1 {
         #expect(result == 2571)
     }
 }
+
+@Suite("day04IsCrossedMAS")
+struct day04IsCrossedMAS {
+    @Test func isCrossedMAS() {
+        let input = """
+            M.S
+            .A.
+            M.S
+            """
+        let matrixParser = day04.matrixParser(input, "MAS")
+        matrixParser.cursor = day04.Position(1, 1)
+        let result = matrixParser.isCrossedMAS()
+        #expect(result == true)
+    }
+}
+
+@Suite("day04CountCrossedMAS")
+struct day04CountCrossedMAS {
+    @Test func countCrossedMAS() {
+        let input = """
+            .M.S......
+            ..A..MSMS.
+            .M.S.MAA..
+            ..A.ASMSM.
+            .M.S.M....
+            ..........
+            S.S.S.S.S.
+            .A.A.A.A..
+            M.M.M.M.M.
+            ..........
+            """
+        let matrixParser = day04.matrixParser(input, "MAS")
+        let result = matrixParser.countCrossedMAS()
+        #expect(result == 9)
+    }
+}
+
+@Suite("day04RunPart2")
+struct day04RunPart2 {
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day04.txt"))
+    )
+    func runPart2() {
+        let fileContent = try! String(contentsOfFile: "inputs/day04.txt", encoding: .utf8)
+        let result = day04.runPart2(fileContent)
+        #expect(result == 1992)
+    }
+}

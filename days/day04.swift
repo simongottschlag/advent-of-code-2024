@@ -129,6 +129,43 @@ public class day04 {
             }
             return count
         }
+
+        func isCrossedMAS() -> Bool {
+            if peek(cursor) != "A" {
+                return false
+            }
+
+            let nwPos = Direction.NorthWest.newPos(cursor)  // Up and to the left
+            let nwPosResult = searchDirection(Direction.SouthEast, nwPos, [])  // From the top left to the bottom right
+            let sePos = Direction.SouthEast.newPos(cursor)  // Down and to the right
+            let sePosResult = searchDirection(Direction.NorthWest, sePos, [])  // From the bottom right to the top left
+
+            if !(nwPosResult || sePosResult) {
+                return false
+            }
+
+            let nePos = Direction.NorthEast.newPos(cursor)  // Up and to the right
+            let nePosResult = searchDirection(Direction.SouthWest, nePos, [])  // From the top right to the bottom left
+            let swPos = Direction.SouthWest.newPos(cursor)  // Down and to the left
+            let swPosResult = searchDirection(Direction.NorthEast, swPos, [])  // From the bottom left to the top right
+
+            return nePosResult || swPosResult
+        }
+
+        func countCrossedMAS() -> Int {
+            if searchTerm.joined() != "MAS" {
+                return 0
+            }
+
+            var count = 0
+            while advanceCursor() {
+                if isCrossedMAS() {
+                    count += 1
+                }
+            }
+
+            return count
+        }
     }
 
     static func parseInput(_ input: String) -> [[String.SubSequence]] {
@@ -140,5 +177,10 @@ public class day04 {
     public static func runPart1(_ input: String) -> Int {
         let parser = matrixParser(input, "XMAS")
         return parser.countInstances()
+    }
+
+    public static func runPart2(_ input: String) -> Int {
+        let parser = matrixParser(input, "MAS")
+        return parser.countCrossedMAS()
     }
 }

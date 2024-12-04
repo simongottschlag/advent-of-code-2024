@@ -62,6 +62,9 @@ struct cli: ParsableCommand {
             let fileContent = try String(contentsOfFile: "inputs/day04.txt", encoding: .utf8)
             let count = day04.runPart1(fileContent)
             print("Day 4, part 1, answer. Count: \(count)")
+
+            let countCrossedMAS = day04.runPart2(fileContent)
+            print("Day 4, part 2, answer. Count X-MAS: \(countCrossedMAS)")
         default:
             print("Day \(day) not implemented")
         }

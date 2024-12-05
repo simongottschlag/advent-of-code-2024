@@ -7,6 +7,7 @@ let package = Package(
     name: "aoc24",
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
+        .package(url: "https://github.com/davecom/SwiftGraph", from: "3.1.0"),
         .package(path: "./days"),
     ],
     targets: [
@@ -14,13 +15,14 @@ let package = Package(
             name: "aoc24",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftGraph", package: "SwiftGraph"),
                 .product(name: "days", package: "days"),
             ],
             path: "cli"
         ),
         .testTarget(
             name: "daysTest",
-            dependencies: ["days"],
+            dependencies: ["days", "SwiftGraph"],
             path: "./tests/days"
         ),
     ]

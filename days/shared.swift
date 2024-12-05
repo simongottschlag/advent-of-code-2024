@@ -13,8 +13,11 @@ public enum dayError: Error {
     case noInputLines
     case stringSplitNotTwoParts
     case notAnUnsignedInteger
+    case notAnInteger
     case listCountNotEqual
     case arrayOutOfBounds
     case listNotEnoughElements
     case shouldNotBeReached
+    case topologicalSortFailed
+    case listCountEven
 }

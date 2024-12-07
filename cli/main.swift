@@ -83,6 +83,15 @@ struct cli: ParsableCommand {
 
             let sum2 = try! result2.get()
             print("Day 5, part 2, answer. Sum: \(sum2)")
+        case 6:
+            let fileContent = try String(contentsOfFile: "inputs/day06.txt", encoding: .utf8)
+            let result = day06.runPart1(fileContent)
+            if case let .failure(error) = result {
+                print("Day 6, part 1, error: \(error)")
+                throw error
+            }
+            let sum = try! result.get()
+            print("Day 6, part 1, answer. Sum: \(sum)")
         default:
             print("Day \(day) not implemented")
         }

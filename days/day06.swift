@@ -139,16 +139,22 @@ public class day06 {
         case NotACell(Position)
         case MoreThanOneGameCharacter(Position)
         case NoGameCharacter
+        case GridLoop
     }
 
     class Grid {
         init(_ grid: [[Cell]], _ gameCharacter: GameCharacter) {
             self.grid = grid
             self.gameCharacter = gameCharacter
+            self.startPosition = gameCharacter.position
+            self.startDirection = gameCharacter.direction
         }
 
         var grid: [[Cell]]
         var gameCharacter: GameCharacter
+        let startPosition: Position
+        let startDirection: GameCharacterDirection
+        var visitedStates: Set<String> = []
 
         static func parse(_ input: String) -> Result<Grid, GridError> {
             var grid: [[Cell]] = []
@@ -231,8 +237,15 @@ public class day06 {
             }
         }
 
-        func play() {
+        func play() -> Bool {
             while true {
+                let state =
+                    "\(gameCharacter.position.x),\(gameCharacter.position.y),\(gameCharacter.direction)"
+                if visitedStates.contains(state) {
+                    return true  // Loop detected
+                }
+                visitedStates.insert(state)
+
                 let nextPosition = gameCharacter.peek()
                 let nextCellType = peek(nextPosition)
 
@@ -243,7 +256,7 @@ public class day06 {
                     move()
                 default:
                     move()
-                    return
+                    return false
                 }
             }
         }
@@ -259,6 +272,34 @@ public class day06 {
             }
             return count
         }
+
+        func findWhereObstaclesCreateLoop() -> Int {
+            var positions: [Position] = []
+            for line in grid {
+                for cell in line {
+                    if cell.position == startPosition {
+                        continue
+                    }
+
+                    if cell.cellType != .Path {
+                        continue
+                    }
+
+                    var newLine = grid[cell.position.y].map { $0 }
+                    newLine[cell.position.x] = Cell(.Obstruction, cell.position, 0)
+                    var newGridMatrix = grid.map { $0 }
+                    newGridMatrix[cell.position.y] = newLine
+                    let newGameCharacter = GameCharacter(startDirection, startPosition)
+                    let newGrid = Grid(newGridMatrix, newGameCharacter)
+                    let isLoop = newGrid.play()
+                    if isLoop {
+                        positions.append(cell.position)
+                    }
+                }
+            }
+
+            return positions.count
+        }
     }
 
     public static func runPart1(_ input: String) -> Result<Int, GridError> {
@@ -268,7 +309,22 @@ public class day06 {
         }
 
         let grid = try! gridResult.get()
-        grid.play()
+        let isLoop = grid.play()
+        if isLoop {
+            return .failure(GridError.GridLoop)
+        }
         return .success(grid.countDistinctVisitedCells())
+    }
+
+    public static func runPart2(_ input: String) -> Result<Int, GridError> {
+        let gridResult = Grid.parse(input)
+        if case let .failure(error) = gridResult {
+            return .failure(error)
+        }
+
+        let grid = try! gridResult.get()
+        let locationsWhereObstaclesCreateLoop = grid.findWhereObstaclesCreateLoop()
+
+        return .success(locationsWhereObstaclesCreateLoop)
     }
 }

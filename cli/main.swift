@@ -90,8 +90,18 @@ struct cli: ParsableCommand {
                 print("Day 6, part 1, error: \(error)")
                 throw error
             }
-            let sum = try! result.get()
-            print("Day 6, part 1, answer. Sum: \(sum)")
+            let distinctPositions = try! result.get()
+            print("Day 6, part 1, answer. Distinct positions: \(distinctPositions)")
+
+            let result2 = day06.runPart2(fileContent)
+            if case let .failure(error) = result2 {
+                print("Day 6, part 2, error: \(error)")
+                throw error
+            }
+            let locationsWhereObstaclesCreateLoop = try! result2.get()
+            print(
+                "Day 6, part 2, answer. Locations where obstacles create loop: \(locationsWhereObstaclesCreateLoop)"
+            )
         default:
             print("Day \(day) not implemented")
         }

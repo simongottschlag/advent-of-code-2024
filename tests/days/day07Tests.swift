@@ -110,55 +110,55 @@ struct day07CartesianProduct {
 struct day07EvaluateCartesianProduct {
     @Test func evaluateCartesianProduct() async throws {
         let calibration = day07.Calibration(190, [10, 19])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == true)
     }
 
     @Test func evaluateCartesianProduct2() async throws {
         let calibration = day07.Calibration(3267, [81, 40, 27])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == true)
     }
 
     @Test func evaluateCartesianProduct3() async throws {
         let calibration = day07.Calibration(292, [11, 6, 16, 20])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == true)
     }
 
     @Test func evaluateCartesianProduct4() async throws {
         let calibration = day07.Calibration(83, [17, 5])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == false)
     }
 
     @Test func evaluateCartesianProduct5() async throws {
         let calibration = day07.Calibration(156, [15, 6])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == false)
     }
 
     @Test func evaluateCartesianProduct6() async throws {
         let calibration = day07.Calibration(7290, [6, 8, 6, 15])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == false)
     }
 
     @Test func evaluateCartesianProduct7() async throws {
         let calibration = day07.Calibration(161011, [16, 10, 13])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == false)
     }
 
     @Test func evaluateCartesianProduct8() async throws {
         let calibration = day07.Calibration(192, [17, 8, 14])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == false)
     }
 
     @Test func evaluateCartesianProduct9() async throws {
         let calibration = day07.Calibration(21037, [9, 7, 18, 13])
-        let result = calibration.evaluateCartesianProduct()
+        let result = calibration.evaluateCartesianProduct([.Add, .Multiply])
         #expect(result == false)
     }
 }
@@ -189,5 +189,34 @@ struct day07RunPart1Tests {
 
         let calibrationSum = try! result.get()
         #expect(calibrationSum == 2_654_749_936_343)
+    }
+}
+
+@Suite("day07RunPart2")
+struct day07RunPart2Tests {
+    @Test func runPart2TestInput() async throws {
+        let result = day07.runPart2(day07TestInput)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+
+        let calibrationSum = try! result.get()
+        #expect(calibrationSum == 11387)
+    }
+
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day07.txt"))
+    )
+    func runPart2() {
+        let fileContent = try! String(contentsOfFile: "inputs/day07.txt", encoding: .utf8)
+        let result = day07.runPart2(fileContent)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+
+        let calibrationSum = try! result.get()
+        #expect(calibrationSum == 124_060_392_153_684)
     }
 }

@@ -111,6 +111,15 @@ struct cli: ParsableCommand {
             }
             let calibrationSum = try! result.get()
             print("Day 7, part 1, answer. Calibration sum: \(calibrationSum)")
+
+            let result2 = day07.runPart2(fileContent)
+            if case let .failure(error) = result2 {
+                print("Day 7, part 2, error: \(error)")
+                throw error
+            }
+
+            let calibrationSum2 = try! result2.get()
+            print("Day 7, part 2, answer. Calibration sum: \(calibrationSum2)")
         default:
             print("Day \(day) not implemented")
         }

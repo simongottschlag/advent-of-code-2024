@@ -54,6 +54,7 @@ public class day07 {
         enum MathOperator: String, CaseIterable {
             case Add = "+"
             case Multiply = "*"
+            case Concatenate = "||"
         }
 
         static func cartesianProduct(_ values: [Int], _ operators: [MathOperator])
@@ -82,9 +83,9 @@ public class day07 {
             return result
         }
 
-        func evaluateCartesianProduct() -> Bool {
+        func evaluateCartesianProduct(_ operators: [MathOperator]) -> Bool {
             let operatorCombinations = Calibration.cartesianProduct(
-                values, Calibration.MathOperator.allCases)
+                values, operators)
             for operatorCombination in operatorCombinations {
                 var combinationResult: Int = values[0]
                 for (index, op) in operatorCombination.enumerated() {
@@ -94,6 +95,8 @@ public class day07 {
                         combinationResult += value
                     case .Multiply:
                         combinationResult *= value
+                    case .Concatenate:
+                        combinationResult = Int(String(combinationResult) + String(value))!
                     }
                 }
                 if combinationResult == target {
@@ -113,7 +116,24 @@ public class day07 {
         let calibrations = try! calibrationResult.get()
         var validCalibrationsSum = 0
         for calibration in calibrations {
-            if calibration.evaluateCartesianProduct() {
+            if calibration.evaluateCartesianProduct([.Add, .Multiply]) {
+                validCalibrationsSum += calibration.target
+            }
+        }
+
+        return .success(validCalibrationsSum)
+    }
+
+    public static func runPart2(_ input: String) -> Result<Int, dayError> {
+        let calibrationResult = Calibration.parseInput(input)
+        if case let .failure(error) = calibrationResult {
+            return .failure(error)
+        }
+
+        let calibrations = try! calibrationResult.get()
+        var validCalibrationsSum = 0
+        for calibration in calibrations {
+            if calibration.evaluateCartesianProduct([.Add, .Multiply, .Concatenate]) {
                 validCalibrationsSum += calibration.target
             }
         }

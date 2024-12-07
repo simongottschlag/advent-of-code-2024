@@ -102,6 +102,15 @@ struct cli: ParsableCommand {
             print(
                 "Day 6, part 2, answer. Locations where obstacles create loop: \(locationsWhereObstaclesCreateLoop)"
             )
+        case 7:
+            let fileContent = try String(contentsOfFile: "inputs/day07.txt", encoding: .utf8)
+            let result = day07.runPart1(fileContent)
+            if case let .failure(error) = result {
+                print("Day 7, part 1, error: \(error)")
+                throw error
+            }
+            let calibrationSum = try! result.get()
+            print("Day 7, part 1, answer. Calibration sum: \(calibrationSum)")
         default:
             print("Day \(day) not implemented")
         }

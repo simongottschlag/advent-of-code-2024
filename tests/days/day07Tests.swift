@@ -66,7 +66,7 @@ struct day07ParseInput {
 struct day07CartesianProduct {
     @Test func cartesianProduct1() async throws {
         let cartisianProduct = day07.Calibration.cartesianProduct(
-            [1, 2], day07.Calibration.MathOperator.allCases)
+            [1, 2], [.Add, .Multiply])
         #expect(
             cartisianProduct == [
                 [.Add],
@@ -77,7 +77,7 @@ struct day07CartesianProduct {
 
     @Test func cartesianProduct2() async throws {
         let cartisianProduct = day07.Calibration.cartesianProduct(
-            [1, 2, 3], day07.Calibration.MathOperator.allCases)
+            [1, 2, 3], [.Add, .Multiply])
         #expect(
             cartisianProduct == [
                 [.Add, .Add],
@@ -90,7 +90,7 @@ struct day07CartesianProduct {
 
     @Test func cartesianProduct3() async throws {
         let cartisianProduct = day07.Calibration.cartesianProduct(
-            [1, 2, 3, 4], day07.Calibration.MathOperator.allCases)
+            [1, 2, 3, 4], [.Add, .Multiply])
         #expect(
             cartisianProduct == [
                 [.Add, .Add, .Add],

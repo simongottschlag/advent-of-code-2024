@@ -1,18 +1,4 @@
 public class day04 {
-    class Position {
-        var x: Int
-        var y: Int
-
-        init(_ x: Int, _ y: Int) {
-            self.x = x
-            self.y = y
-        }
-
-        static func == (lhs: Position, rhs: Position) -> Bool {
-            return lhs.x == rhs.x && lhs.y == rhs.y
-        }
-    }
-
     enum Direction {
         case North
         case NorthEast

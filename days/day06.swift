@@ -121,20 +121,6 @@ public class day06 {
         }
     }
 
-    public final class Position: Equatable, Sendable {
-        let x: Int
-        let y: Int
-
-        init(_ x: Int, _ y: Int) {
-            self.x = x
-            self.y = y
-        }
-
-        public static func == (lhs: Position, rhs: Position) -> Bool {
-            return lhs.x == rhs.x && lhs.y == rhs.y
-        }
-    }
-
     public enum GridError: Error {
         case NotACell(Position)
         case MoreThanOneGameCharacter(Position)

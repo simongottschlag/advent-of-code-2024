@@ -20,4 +20,24 @@ public enum dayError: Error {
     case shouldNotBeReached
     case topologicalSortFailed
     case listCountEven
+    case notImplemented
+    case pointsNotAligened
+}
+
+public final class Position: Equatable, Sendable {
+    let x: Int
+    let y: Int
+
+    init(_ x: Int, _ y: Int) {
+        self.x = x
+        self.y = y
+    }
+
+    public static func == (lhs: Position, rhs: Position) -> Bool {
+        return lhs.x == rhs.x && lhs.y == rhs.y
+    }
+
+    public func toString() -> String {
+        return "Position(\(x), \(y))"
+    }
 }

@@ -46,7 +46,7 @@ struct day04SearchDirection {
             X
             """
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.North, day04.Position(0, 3), [])
+        let result = matrixParser.searchDirection(.North, Position(0, 3), [])
         #expect(result == true)
     }
 
@@ -58,14 +58,14 @@ struct day04SearchDirection {
             X...
             """
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.NorthEast, day04.Position(0, 3), [])
+        let result = matrixParser.searchDirection(.NorthEast, Position(0, 3), [])
         #expect(result == true)
     }
 
     @Test func searchDirectionEast() {
         let input = "XMAS"
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.East, day04.Position(0, 0), [])
+        let result = matrixParser.searchDirection(.East, Position(0, 0), [])
         #expect(result == true)
     }
 
@@ -77,7 +77,7 @@ struct day04SearchDirection {
             ...S
             """
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.SouthEast, day04.Position(0, 0), [])
+        let result = matrixParser.searchDirection(.SouthEast, Position(0, 0), [])
         #expect(result == true)
     }
 
@@ -89,7 +89,7 @@ struct day04SearchDirection {
             S
             """
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.South, day04.Position(0, 0), [])
+        let result = matrixParser.searchDirection(.South, Position(0, 0), [])
         #expect(result == true)
     }
 
@@ -101,14 +101,14 @@ struct day04SearchDirection {
             S...
             """
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.SouthWest, day04.Position(3, 0), [])
+        let result = matrixParser.searchDirection(.SouthWest, Position(3, 0), [])
         #expect(result == true)
     }
 
     @Test func searchDirectionWest() {
         let input = "SAMX"
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.West, day04.Position(3, 0), [])
+        let result = matrixParser.searchDirection(.West, Position(3, 0), [])
         #expect(result == true)
     }
 
@@ -120,7 +120,7 @@ struct day04SearchDirection {
             ...X
             """
         let matrixParser = day04.matrixParser(input, "XMAS")
-        let result = matrixParser.searchDirection(.NorthWest, day04.Position(3, 3), [])
+        let result = matrixParser.searchDirection(.NorthWest, Position(3, 3), [])
         #expect(result == true)
     }
 
@@ -203,7 +203,7 @@ struct day04IsCrossedMAS {
             M.S
             """
         let matrixParser = day04.matrixParser(input, "MAS")
-        matrixParser.cursor = day04.Position(1, 1)
+        matrixParser.cursor = Position(1, 1)
         let result = matrixParser.isCrossedMAS()
         #expect(result == true)
     }

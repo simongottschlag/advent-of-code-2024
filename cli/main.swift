@@ -120,6 +120,15 @@ struct cli: ParsableCommand {
 
             let calibrationSum2 = try! result2.get()
             print("Day 7, part 2, answer. Calibration sum: \(calibrationSum2)")
+        case 8:
+            let fileContent = try String(contentsOfFile: "inputs/day08.txt", encoding: .utf8)
+            let result = day08.runPart1(fileContent)
+            if case let .failure(error) = result {
+                print("Day 8, part 1, error: \(error)")
+                throw error
+            }
+            let antiNodeCount = try! result.get()
+            print("Day 8, part 1, answer. Anti node count: \(antiNodeCount)")
         default:
             print("Day \(day) not implemented")
         }

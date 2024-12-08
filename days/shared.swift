@@ -24,7 +24,7 @@ public enum dayError: Error {
     case pointsNotAligened
 }
 
-public final class Position: Equatable, Sendable {
+public final class Position: Equatable, Sendable, Hashable {
     let x: Int
     let y: Int
 
@@ -39,5 +39,19 @@ public final class Position: Equatable, Sendable {
 
     public func toString() -> String {
         return "Position(\(x), \(y))"
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
+    }
+}
+
+func greatestCommonDivisor(_ a: Int, _ b: Int) -> Int {
+    let r = a % b
+    if r != 0 {
+        return greatestCommonDivisor(b, r)
+    } else {
+        return b
     }
 }

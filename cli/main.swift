@@ -122,13 +122,21 @@ struct cli: ParsableCommand {
             print("Day 7, part 2, answer. Calibration sum: \(calibrationSum2)")
         case 8:
             let fileContent = try String(contentsOfFile: "inputs/day08.txt", encoding: .utf8)
-            let result = day08.runPart1(fileContent)
+            let result = day08Part1.run(fileContent)
             if case let .failure(error) = result {
                 print("Day 8, part 1, error: \(error)")
                 throw error
             }
             let antiNodeCount = try! result.get()
             print("Day 8, part 1, answer. Anti node count: \(antiNodeCount)")
+
+            let result2 = day08Part2.run(fileContent)
+            if case let .failure(error) = result2 {
+                print("Day 8, part 2, error: \(error)")
+                throw error
+            }
+            let antiNodeCount2 = try! result2.get()
+            print("Day 8, part 2, answer. Anti node count: \(antiNodeCount2)")
         default:
             print("Day \(day) not implemented")
         }

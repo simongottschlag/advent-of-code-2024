@@ -1,4 +1,4 @@
-public class day08 {
+public class day08Part1 {
     enum PointType: Equatable {
         case Antenna(Character)
         case AntiNode(Point, Point)
@@ -219,7 +219,202 @@ public class day08 {
         return .success(Grid(grid))
     }
 
-    public static func runPart1(_ input: String) -> Result<Int, dayError> {
+    public static func run(_ input: String) -> Result<Int, dayError> {
+        let gridResult = parseInput(input)
+        if case let .failure(error) = gridResult {
+            return .failure(error)
+        }
+        let grid = try! gridResult.get()
+
+        let antiNodes = grid.findAntiNodes()
+        return .success(antiNodes.count)
+    }
+}
+
+public class day08Part2 {
+    enum PointType: Equatable, Hashable {
+        case Antenna(Character)
+        case Empty
+
+        static func == (lhs: PointType, rhs: PointType) -> Bool {
+            switch (lhs, rhs) {
+            case (let .Antenna(lhsChar), let .Antenna(rhsChar)):
+                return lhsChar == rhsChar
+            case (.Empty, .Empty):
+                return true
+            default:
+                return false
+            }
+        }
+
+        static func ~= (lhs: PointType, rhs: PointType) -> Bool {
+            switch (lhs, rhs) {
+            case (.Antenna(_), .Antenna(_)):
+                return true
+            case (.Empty, .Empty):
+                return true
+            default:
+                return false
+            }
+        }
+
+        func hash(into hasher: inout Hasher) {
+            switch self {
+            case let .Antenna(char):
+                hasher.combine(char)
+            case .Empty:
+                hasher.combine(0)
+            }
+        }
+    }
+
+    class Point {
+        let position: Position
+        let pointType: PointType
+
+        init(_ position: Position, _ pointType: PointType) {
+            self.position = position
+            self.pointType = pointType
+        }
+
+        static func == (lhs: Point, rhs: Point) -> Bool {
+            return lhs.position == rhs.position && lhs.pointType == rhs.pointType
+        }
+    }
+
+    class Grid {
+        var grid: [[Point]]
+
+        init(_ grid: [[Point]]) {
+            self.grid = grid
+        }
+
+        func inGrid(_ position: Position) -> Bool {
+            return grid[safe: position.y]?[safe: position.x] != nil
+        }
+
+        func points() -> [Point] {
+            return grid.flatMap { $0.map { $0 } }
+        }
+
+        func pointsMap() -> [PointType: [Point]] {
+            return Dictionary(grouping: points(), by: { $0.pointType })
+        }
+
+        func generateCombinations(_ points: [Point]) -> [(Point, Point)] {
+            var pairs: [(Point, Point)] = []
+            for (index, lhs) in points.enumerated() {
+                for rhs in points.suffix(from: index + 1) {
+                    pairs.append((lhs, rhs))
+                }
+            }
+            return pairs
+        }
+
+        func walkLineForward(_ lhs: Point, stepX: Int, stepY: Int) -> Set<Position> {
+            var positions: Set<Position> = []
+            var position = lhs.position
+            while inGrid(position) {
+                positions.insert(position)
+                position = Position(position.x + stepX, position.y + stepY)
+            }
+            return positions
+        }
+
+        func walkLineBackward(_ lhs: Point, stepX: Int, stepY: Int) -> Set<Position> {
+            var positions: Set<Position> = []
+            var position = lhs.position
+            while inGrid(position) {
+                positions.insert(position)
+                position = Position(position.x - stepX, position.y - stepY)
+            }
+            return positions
+        }
+
+        func walkLine(_ lhs: Point, _ rhs: Point) -> Set<Position> {
+            let dx = rhs.position.x - lhs.position.x
+            let dy = rhs.position.y - lhs.position.y
+            let g = greatestCommonDivisor(dx, dy)
+            let stepX = dx / g
+            let stepY = dy / g
+
+            var positions: Set<Position> = [lhs.position, rhs.position]
+
+            for forwardPosition in walkLineForward(lhs, stepX: stepX, stepY: stepY) {
+                if inGrid(forwardPosition) {
+                    positions.insert(forwardPosition)
+                }
+            }
+
+            for backwardPosition in walkLineBackward(lhs, stepX: stepX, stepY: stepY) {
+                if inGrid(backwardPosition) {
+                    positions.insert(backwardPosition)
+                }
+            }
+
+            return positions
+
+        }
+
+        func walkPointType(_ pointType: PointType) -> Set<Position> {
+            let points = pointsMap().filter { $0.key == pointType }.values.first ?? []
+            if points.count < 2 {
+                return []
+            }
+
+            var positions: Set<Position> = []
+            for (lhs, rhs) in generateCombinations(points) {
+                for position in walkLine(lhs, rhs) {
+                    positions.insert(position)
+                }
+            }
+
+            return positions
+        }
+
+        func findAntiNodes() -> Set<Position> {
+            var positions: Set<Position> = []
+            for (pointType, _) in pointsMap() {
+                if case .Antenna = pointType {
+                    let pointTypePositions = walkPointType(pointType)
+                    for position in pointTypePositions {
+                        if inGrid(position) {
+                            positions.insert(position)
+                        }
+                    }
+                }
+            }
+
+            return positions
+        }
+    }
+
+    static func parseLine(_ line: String.SubSequence, _ y: Int) -> Result<[Point], dayError> {
+        let points = line.enumerated().map { (x, point) in
+            switch point {
+            case ".":
+                return Point(Position(x, y), .Empty)
+            default:
+                return Point(Position(x, y), .Antenna(point))
+            }
+        }
+        return .success(points)
+    }
+
+    static func parseInput(_ input: String) -> Result<Grid, dayError> {
+        var grid: [[Point]] = []
+        for (y, line) in input.lines.enumerated() {
+            let lineResult = parseLine(line, y)
+            if case let .failure(error) = lineResult {
+                return .failure(error)
+            }
+            let line = try! lineResult.get()
+            grid.append(line)
+        }
+        return .success(Grid(grid))
+    }
+
+    public static func run(_ input: String) -> Result<Int, dayError> {
         let gridResult = parseInput(input)
         if case let .failure(error) = gridResult {
             return .failure(error)

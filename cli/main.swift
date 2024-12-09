@@ -137,6 +137,15 @@ struct cli: ParsableCommand {
             }
             let antiNodeCount2 = try! result2.get()
             print("Day 8, part 2, answer. Anti node count: \(antiNodeCount2)")
+        case 9:
+            let fileContent = try String(contentsOfFile: "inputs/day09.txt", encoding: .utf8)
+            let result = day09.runPart1(fileContent)
+            if case let .failure(error) = result {
+                print("Day 9, part 1, error: \(error)")
+                throw error
+            }
+            let checksum = try! result.get()
+            print("Day 9, part 1, answer. Checksum: \(checksum)")
         default:
             print("Day \(day) not implemented")
         }

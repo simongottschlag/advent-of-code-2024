@@ -11,6 +11,7 @@ extension Collection {
 public enum dayError: Error {
     case emptyInput
     case noInputLines
+    case notSingleLine
     case stringSplitNotTwoParts
     case notAnUnsignedInteger
     case notAnInteger

@@ -144,5 +144,63 @@ struct day09RunPart1Tests {
         let checksum = try! result.get()
         #expect(checksum == 6_259_790_630_969)
     }
+}
 
+@Suite("day08Compact")
+struct day08CompactPart2Tests {
+    @Test("day08CompactPart2 with test input")
+    func compactPart2TestInput() {
+        let result = day09.parse(day09TestInput)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+        let diskmap = try! result.get()
+        let compacted = diskmap.compactPart2()
+        #expect(compacted.toString() == "00992111777.44.333....5555.6666.....8888..")
+    }
+}
+
+@Suite("day08CompactedPart2Checksum")
+struct day08CompactedPart2ChecksumTests {
+    @Test("day08CompactedPart2Checksum with test input")
+    func compactedPart2ChecksumTestInput() {
+        let result = day09.parse(day09TestInput)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+        let diskmap = try! result.get()
+        let checksum = diskmap.compactedPart2Checksum()
+        #expect(checksum == 2858)
+    }
+}
+
+@Suite("day09RunPart2")
+struct day09RunPart2Tests {
+    @Test("day09Part2 with test input")
+    func test1() {
+        let result = day09.runPart2(day09TestInput)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+        let checksum = try! result.get()
+        #expect(checksum == 2858)
+    }
+
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day09.txt"))
+    )
+    func runPart2() {
+        let fileContent = try! String(contentsOfFile: "inputs/day09.txt", encoding: .utf8)
+        let result = day09.runPart2(fileContent)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+
+        let checksum = try! result.get()
+        #expect(checksum == 6_289_564_433_984)
+    }
 }

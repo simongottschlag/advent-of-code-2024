@@ -11,6 +11,16 @@ extension [BlockInt] {
     }
 }
 
+extension [day09.Block] {
+    func toInt() -> [BlockInt] {
+        return self.flatMap { $0.toInt() }
+    }
+
+    func toString() -> String {
+        return self.map { $0.toString() }.joined()
+    }
+}
+
 public class day09 {
 
     enum Block: Equatable {
@@ -86,8 +96,55 @@ public class day09 {
             return intBlocks
         }
 
+        func compactPart2() -> [BlockInt] {
+            var blocksCopy = blocks.map { $0 }
+            for rhsPosition in (0..<blocksCopy.count).reversed() {
+                let rhsBlock = blocksCopy[rhsPosition]
+                guard case let .File(_, rhsCount) = rhsBlock else {
+                    continue
+                }
+
+                for lhsPosition in 0..<blocksCopy.count {
+                    if lhsPosition >= rhsPosition {
+                        break
+                    }
+
+                    let lhsBlock = blocksCopy[lhsPosition]
+                    guard case let .Free(freeCount) = lhsBlock else {
+                        continue
+                    }
+
+                    if rhsCount <= freeCount {
+                        if rhsCount == freeCount {
+                            blocksCopy.swapAt(lhsPosition, rhsPosition)
+                            break
+                        }
+
+                        let remainderFreeCount = freeCount - rhsCount
+                        blocksCopy[lhsPosition] = .Free(count: remainderFreeCount)
+                        blocksCopy[rhsPosition] = .Free(count: rhsCount)
+                        blocksCopy.insert(rhsBlock, at: lhsPosition)
+                        break
+                    }
+                }
+            }
+
+            return blocksCopy.toInt()
+        }
+
         func compactedChecksum() -> Int {
             let intBlocks = compact()
+            var sum = 0
+            for (index, value) in intBlocks.enumerated() {
+                if let value = value {
+                    sum += index * value
+                }
+            }
+            return sum
+        }
+
+        func compactedPart2Checksum() -> Int {
+            let intBlocks = compactPart2()
             var sum = 0
             for (index, value) in intBlocks.enumerated() {
                 if let value = value {
@@ -130,6 +187,17 @@ public class day09 {
 
         let diskmap = try! result.get()
         let checksum = diskmap.compactedChecksum()
+        return .success(checksum)
+    }
+
+    public static func runPart2(_ input: String) -> Result<Int, dayError> {
+        let result = parse(input)
+        if case let .failure(error) = result {
+            return .failure(error)
+        }
+
+        let diskmap = try! result.get()
+        let checksum = diskmap.compactedPart2Checksum()
         return .success(checksum)
     }
 }

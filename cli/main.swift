@@ -155,6 +155,15 @@ struct cli: ParsableCommand {
 
             let checksum2 = try! result2.get()
             print("Day 9, part 2, answer. Checksum: \(checksum2)")
+        case 10:
+            let fileContent = try String(contentsOfFile: "inputs/day10.txt", encoding: .utf8)
+            let result = day10.runPart1(fileContent)
+            if case let .failure(error) = result {
+                print("Day 10, part 1, error: \(error)")
+                throw error
+            }
+            let value = try! result.get()
+            print("Day 10, part 1, answer. Trail score: \(value)")
         default:
             print("Day \(day) not implemented")
         }

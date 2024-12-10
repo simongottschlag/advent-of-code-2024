@@ -1,3 +1,5 @@
+import SwiftGraph
+
 extension StringProtocol {
     var lines: [SubSequence] { split(whereSeparator: \.isNewline) }
 }
@@ -25,7 +27,7 @@ public enum dayError: Error {
     case pointsNotAligened
 }
 
-public final class Position: Equatable, Sendable, Hashable {
+public final class Position: Equatable, Sendable, Hashable, Encodable, Decodable {
     let x: Int
     let y: Int
 
@@ -45,6 +47,12 @@ public final class Position: Equatable, Sendable, Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
         hasher.combine(y)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(x, forKey: .x)
+        try container.encode(y, forKey: .y)
     }
 }
 

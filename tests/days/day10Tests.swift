@@ -63,3 +63,30 @@ struct day10RunPart1Tests {
         #expect(value == 646)
     }
 }
+
+@Suite("day10RunPart2")
+struct day10RunPart2Tests {
+    @Test func runPart2TestInput() async throws {
+        let result = day10.runPart2(day10TestInput)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+        let value = try! result.get()
+        #expect(value == 81)
+    }
+
+    @Test(
+        .enabled(if: FileManager.default.fileExists(atPath: "inputs/day10.txt"))
+    )
+    func runPart2() {
+        let fileContent = try! String(contentsOfFile: "inputs/day10.txt", encoding: .utf8)
+        let result = day10.runPart2(fileContent)
+        if case let .failure(error) = result {
+            Issue.record("Should never be reached: \(error)")
+            return
+        }
+        let value = try! result.get()
+        #expect(value == 1494)
+    }
+}

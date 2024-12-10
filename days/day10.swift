@@ -110,12 +110,48 @@ public class day10 {
             let trailHeads = graph.filter({ $0.value == 0 })
             var trails: [Point: Int] = [:]
             for trailHead in trailHeads {
-                let trail = graph.findAllDfs(from: trailHead, goalTest: { $0.value == 9 }).flatMap {
-                    $0
-                }
-                let foundTrails = graph.edgesToVertices(edges: trail).filter { $0.value == 9 }.count
-                trails[trailHead] = foundTrails
+                let paths = graph.findAllDfs(from: trailHead, goalTest: { $0.value == 9 })
+                trails[trailHead] = paths.count
             }
+            return trails
+        }
+
+        func findTrailsPart2() -> [Point: Int] {
+            let graph = buildGraph()
+            var memo: [Point: Int] = [:]
+
+            func distinctPaths(from point: Point) -> Int {
+                if point.value == 9 {
+                    return 1
+                }
+
+                if let cached = memo[point] {
+                    return cached
+                }
+
+                var ways = 0
+                guard let edges = graph.edgesForVertex(point) else {
+                    return 0
+                }
+
+                for edge in edges {
+                    let successor = graph.vertexAtIndex(edge.v)
+                    if successor.value == point.value + 1 {
+                        ways += distinctPaths(from: successor)
+                    }
+                }
+
+                memo[point] = ways
+                return ways
+            }
+
+            let trailHeads = graph.filter({ $0.value == 0 })
+            var trails: [Point: Int] = [:]
+            for trailHead in trailHeads {
+                let pathsCount = distinctPaths(from: trailHead)
+                trails[trailHead] = pathsCount
+            }
+
             return trails
         }
     }
@@ -127,6 +163,16 @@ public class day10 {
         }
         let map = try! mapResult.get()
         let trailScores = map.findTrails().reduce(0) { $0 + $1.value }
+        return .success(trailScores)
+    }
+
+    public static func runPart2(_ input: String) -> Result<Int, MapError> {
+        let mapResult = Map.parse(input)
+        if case let .failure(error) = mapResult {
+            return .failure(error)
+        }
+        let map = try! mapResult.get()
+        let trailScores = map.findTrailsPart2().reduce(0) { $0 + $1.value }
         return .success(trailScores)
     }
 }

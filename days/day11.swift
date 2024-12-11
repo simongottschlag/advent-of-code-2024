@@ -141,4 +141,13 @@ public class day11 {
         let stones = try! result.get()
         return .success(stones.blink(times: 25).count)
     }
+
+    public static func runPart2(_ input: String) -> Result<Int, dayError> {
+        let result = parse(input)
+        if case let .failure(error) = result {
+            return .failure(error)
+        }
+        let stones = try! result.get()
+        return .success(stones.blink(times: 75).count)
+    }
 }

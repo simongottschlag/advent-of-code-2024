@@ -181,6 +181,15 @@ struct cli: ParsableCommand {
             }
             let numberOfStones = try! result.get()
             print("Day 11, part 1, answer. Number of stones: \(numberOfStones)")
+
+        // This is a very slow operation and won't finish, crashes around blink 40
+        // let result2 = day11.runPart2(fileContent)
+        // if case let .failure(error) = result2 {
+        //     print("Day 11, part 2, error: \(error)")
+        //     throw error
+        // }
+        // let numberOfStones2 = try! result2.get()
+        // print("Day 11, part 2, answer. Number of stones: \(numberOfStones2)")
         default:
             print("Day \(day) not implemented")
         }
